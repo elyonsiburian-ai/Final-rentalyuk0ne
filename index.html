@@ -5,20 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Manajemen Sewa (LocalBase)</title>
     
-    <!-- Framework & Fonts (Masih diperlukan) -->
+    <!-- Framework & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- (BARU) Link ke file CSS kustom Anda -->
+    <!-- Link ke file CSS kustom Anda -->
     <link rel="stylesheet" href="style.css">
     
 </head>
 <body class="text-gray-100">
 
-    <!-- Konten HTML tetap sama, tapi tanpa <style> -->
     <div id="main-content" class="flex h-screen">
 
         <!-- BAGIAN SIDEBAR NAVIGASI KIRI -->
@@ -162,7 +161,8 @@
                     <p class="text-xl text-gray-400 -mt-1 mb-6" style="font-family: 'Poppins', sans-serif; font-weight: 400;">Total jam penggunaan berdasarkan item.</p>
                     
                     <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                        <div class="w-full max-w-md mx-auto">
+                        <!-- Wrapper Canvas Diubah -->
+                        <div class="w-full max-w-3xl mx-auto" style="height: 450px;">
                             <canvas id="stats-pie-chart"></canvas>
                         </div>
                         <div id="stats-no-data" class="text-center text-gray-500 py-10 hidden">
@@ -556,8 +556,8 @@
     </div>
 
 
-    <!-- (BARU) Link ke file JavaScript Anda (di akhir body) -->
+    <!-- Link ke file JavaScript Anda (di akhir body) -->
     <script src="script.js" type="module"></script>
 
 </body>
-</html>
+</html>                        <h3 class="text-
