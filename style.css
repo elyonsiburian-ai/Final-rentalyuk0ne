@@ -1,0 +1,121 @@
+/* Ini adalah file CSS kustom Anda.
+  Aturan Tailwind @apply telah dikonversi menjadi CSS standar 
+  agar bisa berjalan tanpa perlu "build step".
+  Aplikasi Anda di index.html masih memuat framework Tailwind dari CDN
+  untuk semua kelas utilitas (seperti bg-gray-800, p-6, dll.)
+*/
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #111827; /* bg-gray-900 */
+}
+
+/* Style scrollbar */
+::-webkit-scrollbar { 
+    width: 8px; 
+    height: 8px; 
+}
+::-webkit-scrollbar-track { 
+    background: #1f2937; 
+}
+::-webkit-scrollbar-thumb { 
+    background: #4b5563; 
+    border-radius: 4px; 
+}
+::-webkit-scrollbar-thumb:hover { 
+    background: #6b7280; 
+}
+
+/* Style nav */
+.nav-link.active {
+    background-color: #2563EB; /* bg-blue-600 */
+    color: white;
+    font-weight: 600;
+}
+.nav-link {
+    color: #D1D5DB; /* text-gray-300 */
+    font-weight: 500;
+}
+.nav-link:hover {
+    background-color: #374151; /* hover:bg-gray-700 */
+    color: white;
+}
+
+/* Style untuk Dropdown Kustom */
+.dropdown-panel {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    margin-top: 0.25rem; 
+    background-color: #374151; /* bg-gray-700 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+    overflow: hidden;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1); /* ease-out */
+    max-height: 0px;
+    opacity: 0;
+    transform-origin: top;
+    transform: scale(0.95);
+}
+.dropdown-panel.open {
+    max-height: 200px; /* Cukup untuk 5-6 item */
+    opacity: 1;
+    transform: scale(1);
+    overflow-y: auto; /* Munculkan scrollbar jika penuh */
+}
+.dropdown-option {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    cursor: pointer;
+    color: #D1D5DB; /* text-gray-200 */
+}
+.dropdown-option:hover {
+    background-color: #2563EB; /* hover:bg-blue-600 */
+    color: white;
+}
+.dropdown-option.selected {
+    background-color: #1D4ED8; /* bg-blue-700 */
+    color: white;
+}
+
+/* Animasi putar untuk panah */
+.dropdown-arrow {
+    transition-property: transform;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1); /* ease-out */
+}
+.dropdown-trigger.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Sembunyikan panah atas/bawah di input number */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Animasi modal (Fade + Scale) */
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+@keyframes modalFadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+}
+
+/* Kelas untuk menerapkan animasi */
+.modal-content-area.modal-showing {
+    animation: modalFadeIn 300ms ease-out;
+}
+.modal-content-area.modal-closing {
+    animation: modalFadeOut 300ms ease-in forwards;
+}
