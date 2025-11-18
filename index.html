@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Sewa (LocalBase)</title>
+    
+    <!-- Framework & Fonts (Masih diperlukan) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- (BARU) Link ke file CSS kustom Anda -->
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body class="text-gray-100">
+
+    <!-- Konten HTML tetap sama, tapi tanpa <style> -->
+    <div id="main-content" class="flex h-screen">
+
+        <!-- BAGIAN SIDEBAR NAVIGASI KIRI -->
+        <aside class="w-64 flex-shrink-0 bg-gray-800 p-6 hidden md:flex flex-col overflow-y-auto">
+            <h1 class="text-3xl font-extrabold text-blue-500 mb-6 mt-2 text-center" style="font-family: 'Poppins', sans-serif;">RentalYuk</h1>
+            
+            <img id="sidebar-profile-pic" 
+                 src="https://placehold.co/150x150/374151/E0E0E0?text=Profil" 
+                 alt="Profil" 
+                 class="w-24 h-24 object-cover rounded-lg mx-auto mb-6 shadow-md hidden transition-all duration-300">
+            
+            <nav class="space-y-2">
+                <a href="#" id="nav-dashboard" class="nav-link flex items-center px-4 py-3 rounded-lg transition-colors active" aria-current="page">
+                    <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" id="nav-inventory" class="nav-link flex items-center px-4 py-3 rounded-lg transition-colors">
+                    <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    <span>Inventaris</span>
+                </a>
+                <a href="#" id="nav-stats" class="nav-link flex items-center px-4 py-3 rounded-lg transition-colors">
+                    <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                    <span>Statistik</span>
+                </a>
+                <a href="#" id="nav-laporan" class="nav-link flex items-center px-4 py-3 rounded-lg transition-colors">
+                    <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <span>Laporan</span>
+                </a>
+                <a href="#" id="nav-settings" class="nav-link flex items-center px-4 py-3 rounded-lg transition-colors">
+                    <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0 3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826 3.31 2.37-2.37.996.608 2.296.096 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    <span>Pengaturan</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Wrapper untuk konten utama yang bisa di-scroll -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- KONTEN UTAMA -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-8">
+                
+                <!-- Wrapper Halaman Dashboard -->
+                <div id="page-dashboard">
+                    <h2 class="text-3xl font-semibold text-white">Dashboard</h2>
+                    <p id="dashboard-greeting" class="text-xl text-gray-400 -mt-1 mb-6" style="font-family: 'Poppins', sans-serif; font-weight: 400;">Memuat data rental...</p>
+
+                    <!-- KARTU STATISTISTIK -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <!-- Kartu Pendapatan -->
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
+                            <div class="p-3 rounded-full bg-purple-600 bg-opacity-30 text-purple-400 mr-4">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2zM0 14s3 4 12 4 12-4 12-4M3 10h18" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-400">Total Pendapatan</p>
+                                <p id="stat-total-revenue" class="text-2xl font-bold text-white">Rp 0</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
+                            <div class="p-3 rounded-full bg-yellow-600 bg-opacity-30 text-yellow-400 mr-4">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-400">Sedang Disewa</p>
+                                <p id="stat-on-rent" class="text-2xl font-bold text-white">0</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
+                            <div class="p-3 rounded-full bg-green-600 bg-opacity-30 text-green-400 mr-4">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-400">Tersedia</p>
+                                <p id="stat-available" class="text-2xl font-bold text-white">0</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
+                            <div class="p-3 rounded-full bg-blue-600 bg-opacity-30 text-blue-400 mr-4">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-400">Total Barang</p>
+                                <p id="stat-total-items" class="text-2xl font-bold text-white">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <div class="w-full flex flex-col gap-8">
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-xl font-semibold text-white">Daftar Sewa Aktif</h3>
+                                    <button id="addRentalBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-all">
+                                        + Tambah Sewa
+                                    </button>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-700">
+                                        <thead class="bg-gray-700">
+                                            <tr>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Nama Barang</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Penyewa</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Sisa Waktu</th>
+                                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">Sesi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="rentals-table-body" class="bg-gray-800 divide-y divide-gray-700">
+                                            <tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Memuat data...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                                <h3 class="text-xl font-semibold text-white mb-4">Histori Sewaan Selesai</h3>
+                                <div class="overflow-x-auto max-h-64 overflow-y-auto">
+                                    <table class="min-w-full divide-y divide-gray-700">
+                                        <thead class="bg-gray-700">
+                                            <tr>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Barang</th>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Penyewa</th>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Durasi</th>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Harga</th>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="history-table-body" class="bg-gray-800 divide-y divide-gray-700">
+                                            <tr><td colspan="5" class="px-4 py-3 text-center text-gray-500">Belum ada histori.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="text-center text-gray-400 py-6 mt-8">
+                        © 2025 RentalYuk. Dibuat dengan cinta untuk pemula.
+                    </footer>
+                </div>
+
+                <div id="page-stats" class="hidden">
+                    <h2 class="text-3xl font-semibold text-white">Statistik Penggunaan</h2>
+                    <p class="text-xl text-gray-400 -mt-1 mb-6" style="font-family: 'Poppins', sans-serif; font-weight: 400;">Total jam penggunaan berdasarkan item.</p>
+                    
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <div class="w-full max-w-md mx-auto">
+                            <canvas id="stats-pie-chart"></canvas>
+                        </div>
+                        <div id="stats-no-data" class="text-center text-gray-500 py-10 hidden">
+                            Belum ada data histori untuk ditampilkan di diagram.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="page-laporan" class="hidden">
+                    <h2 class="text-3xl font-semibold text-white">Laporan Sewa Aktif</h2>
+                    <p class="text-xl text-gray-400 -mt-1 mb-6" style="font-family: 'Poppins', sans-serif; font-weight: 400;">Pantau semua perangkat yang sedang online.</p>
+                    
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-700">
+                                <thead class="bg-gray-700">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Penyewa</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Nama Barang</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Harga</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Sisa Waktu</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="laporan-table-body" class="bg-gray-800 divide-y divide-gray-700">
+                                    <tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">Memuat data...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="page-inventory" class="hidden">
+                    <h2 class="text-3xl font-semibold text-white">Manajemen Inventaris</h2>
+                    <p class="text-xl text-gray-400 -mt-1 mb-6" style="font-family: 'Poppins', sans-serif; font-weight: 400;">Kelola semua barang rental Anda.</p>
+                    
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-semibold text-white mb-4">Daftar Item</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-700">
+                                <thead class="bg-gray-700">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Nama</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Warna</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Tersedia</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Total</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-table-body" class="bg-gray-800 divide-y divide-gray-700">
+                                    <tr><td colspan="5" class="px-4 py-3 text-center text-gray-500">Memuat data...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button id="add-inventory-btn" class="mt-4 w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-all">
+                            + Tambah Item Baru
+                        </button>
+                        <button id="seed-data-btn" class="hidden mt-2 w-full md:w-auto bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-all">
+                            Isi Data Awal (Contoh)
+                        </button>
+                    </div>
+                </div>
+
+                <div id="page-settings" class="hidden">
+                    <h2 class="text-3xl font-semibold text-white">Pengaturan</h2>
+                    <p class="text-xl text-gray-400 -mt-1 mb-6" style="font-family: 'Poppins', sans-serif; font-weight: 400;">Kelola preferensi aplikasi Anda.</p>
+                    
+                    <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-xl font-semibold text-white mb-6">Nama Rental</h3>
+                        <form id="rental-name-form">
+                            <label for="settings-rental-name" class="block text-sm font-medium text-gray-300 mb-2">Nama Rental Anda (Tampil di Dashboard)</label>
+                            <input type="text" id="settings-rental-name" placeholder="Contoh: Super PS Rental" required
+                                   class="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500">
+                            <div class="text-right mt-4">
+                                <button type="submit" 
+                                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg shadow-md transition-all">
+                                    Simpan Nama
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-xl font-semibold text-white mb-6">Profil</h3>
+                        <div class="flex flex-col md:flex-row items-center gap-6">
+                            <img id="settings-profile-preview" 
+                                 src="https://placehold.co/150x150/374151/E0E0E0?text=Profil" 
+                                 alt="Preview" 
+                                 class="w-36 h-36 rounded-full object-cover shadow-md transition-all duration-300 ease-in-out">
+                            
+                            <div class="flex flex-col items-center md:items-start">
+                                <p class="text-gray-400 mb-3 text-center md:text-left">
+                                    Pilih gambar baru (.jpg/.png, maks 2MB).
+                                </p>
+                                <input type="file" id="profile-pic-upload" class="hidden" accept="image/jpeg, image/png">
+                                <label for="profile-pic-upload" 
+                                       class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg shadow-md transition-all">
+                                    Pilih Gambar
+                                </label>
+                            </div>
+                        </div>
+                        <div class="text-right mt-6">
+                            <button id="save-profile-btn" 
+                                    class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-5 rounded-lg shadow-md transition-all opacity-50 cursor-not-allowed"
+                                    disabled>
+                                Simpan Perubahan Profil
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-semibold text-white mb-4">Hapus Data</h3>
+                        <p class="text-gray-400 mb-4">Menghapus semua data (inventaris, sewa, histori, dan profil) dari browser ini. Tidak bisa dibatalkan.</p>
+                        <button id="delete-all-data-btn" 
+                                class="bg-red-700 hover:bg-red-800 text-white font-medium py-2 px-5 rounded-lg shadow-md transition-all">
+                            Hapus Semua Data
+                        </button>
+                    </div>
+                </div>
+
+            </main> 
+            
+        </div>
+    </div>
+
+
+    <!-- MODAL UNTUK SETUP AWAL -->
+    <div id="setup-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-50">
+        <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-lg">
+            <h4 class="text-3xl font-semibold mb-2 text-white text-center" style="font-family: 'Poppins', sans-serif;">Selamat Datang di RentalYuk!</h4>
+            <p class="text-center text-gray-300 mb-8">Mari kita siapkan akun rental Anda.</p>
+            
+            <form id="setup-form">
+                <div class="space-y-6">
+                    <div>
+                        <label for="setup-rental-name" class="block text-sm font-medium text-gray-300 mb-1">
+                            Nama Rental Anda <span class="text-red-400">*</span>
+                        </label>
+                        <input type="text" id="setup-rental-name" name="rentalName" required placeholder="Contoh: Budi PS Center" 
+                               class="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Foto Profil / Logo Rental (Opsional)
+                        </label>
+                        <div class="flex items-center gap-4">
+                            <img id="setup-profile-preview" 
+                                 src="https://placehold.co/100x100/374151/E0E0E0?text=Logo" 
+                                 alt="Preview" 
+                                 class="w-24 h-24 rounded-lg object-cover shadow-md transition-all duration-300 ease-in-out">
+                            <div>
+                                <input type="file" id="setup-profile-upload" class="hidden" accept="image/jpeg, image/png">
+                                <label for="setup-profile-upload" 
+                                       class="cursor-pointer bg-gray-600 hover:bg-gray-500 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-all">
+                                    Pilih Gambar...
+                                </label>
+                                <p class="text-xs text-gray-400 mt-2">Maks 2MB. Akan tampil di sidebar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-10">
+                    <button type="submit" class="w-full md:w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-all text-lg">
+                        Simpan & Mulai
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL UNTUK TAMBAH SEWA -->
+    <div id="rental-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-40">
+        <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md">
+            <h4 class="text-2xl font-semibold mb-6 text-white">Formulir Sewa Baru</h4>
+            <form id="rental-form">
+                <div class="space-y-4">
+                    <!-- Blok Dropdown Kustom Item -->
+                    <div>
+                        <label for="item-select-trigger" class="block text-sm font-medium text-gray-300 mb-1">Pilih Barang (Hanya yang tersedia)</label>
+                        <div class="relative custom-select-wrapper">
+                            <input type="hidden" id="item-select" name="itemId" required>
+                            <button type="button" id="item-select-trigger" 
+                                    class="dropdown-trigger w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm 
+                                           focus:outline-none focus:ring-2 focus:ring-blue-500 
+                                           flex justify-between items-center text-left">
+                                <span id="item-select-text" class="text-gray-400">Pilih barang...</span>
+                                <svg class="dropdown-arrow w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <ul id="item-select-options" class="dropdown-panel">
+                                <!-- Opsi diisi oleh JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="renter-name" class="block text-sm font-medium text-gray-300 mb-1">Nama Penyewa</label>
+                        <input type="text" id="renter-name" name="renterName" required placeholder="Contoh: Budi" class="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500">
+                    </div>
+                    
+                    <!-- Blok Dropdown Kustom Durasi (Sekarang Dinamis) -->
+                    <div>
+                        <label for="rental-duration-trigger" class="block text-sm font-medium text-gray-300 mb-1">Durasi Sewa</label>
+                        <div class="relative custom-select-wrapper">
+                            <input type="hidden" id="rental-duration" name="durationMinutes" required>
+                            <input type="hidden" id="rental-price">
+                            
+                            <button type="button" id="rental-duration-trigger" 
+                                    class="dropdown-trigger w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm 
+                                           focus:outline-none focus:ring-2 focus:ring-blue-500 
+                                           flex justify-between items-center text-left disabled:opacity-50 disabled:cursor-not-allowed" disabled> 
+                                <span id="rental-duration-text" class="text-gray-400">Pilih barang dulu...</span>
+                                <svg class="dropdown-arrow w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <ul id="rental-duration-options" class="dropdown-panel">
+                                <!-- Opsi diisi oleh JavaScript berdasarkan barang -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Tampilan Harga -->
+                    <div>
+                        <p class="text-lg text-green-400 font-bold mt-2 text-center" id="rental-price-display">Harga: Rp 0</p>
+                    </div>
+
+                </div>
+                <div class="flex justify-end gap-4 mt-8">
+                    <button type="button" id="cancelBtn" class="bg-gray-600 hover:bg-gray-500 text-gray-100 font-medium py-2 px-5 rounded-lg transition-all">Batal</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg shadow-md transition-all">Mulai Sewa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- MODAL UNTUK TAMBAH INVENTARIS -->
+    <div id="inventory-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-40">
+        <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md">
+            <h4 class="text-2xl font-semibold mb-6 text-white">Formulir Item Inventaris</h4>
+            <form id="inventory-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="item-id" class="block text-sm font-medium text-gray-300 mb-1">ID Item (Unik, huruf besar, tanpa spasi)</label>
+                        <input type="text" id="item-id" name="itemId" required placeholder="Contoh: PS5SLIM" class="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 uppercase">
+                    </div>
+                    <div>
+                        <label for="item-name" class="block text-sm font-medium text-gray-300 mb-1">Nama Item</label>
+                        <input type="text" id="item-name" name="itemName" required placeholder="Contoh: PlayStation 5 Slim" class="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500">
+                    </div>
+                    <div>
+                        <label for="item-category" class="block text-sm font-medium text-gray-300 mb-1">Kategori</label>
+                        <input type="text" id="item-category" name="itemCategory" required value="Konsol" class="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500">
+                    </div>
+                    <div>
+                        <label for="item-stock" class="block text-sm font-medium text-gray-300 mb-1">Total Stok Awal</label>
+                        <input type="number" id="item-stock" name="itemStock" required min="1" value="1" class="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-4 mt-8">
+                    <button type="button" id="inventory-cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-gray-100 font-medium py-2 px-5 rounded-lg transition-all">Batal</button>
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-5 rounded-lg shadow-md transition-all">Simpan Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL UNTUK PENGATURAN HARGA ITEM -->
+    <div id="pricing-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-40">
+        <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-lg">
+            <h4 class="text-2xl font-semibold mb-2 text-white">Atur Paket Harga</h4>
+            <p class="text-lg text-blue-400 mb-6" id="pricing-item-name">Nama Item</p>
+            
+            <form id="pricing-form">
+                <input type="hidden" id="pricing-item-id">
+                
+                <p class="text-sm text-gray-400 mb-4">Isi harga untuk paket durasi yang ingin Anda tawarkan untuk item ini. Paket dengan harga "0" tidak akan tampil di formulir sewa.</p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4 max-h-64 overflow-y-auto pr-2">
+                    <!-- Daftar Harga Default -->
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">30 Menit</LAbel>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
+                            <span class="text-gray-400">Rp</span>
+                        </div>
+                        <input type="number" data-minutes="30" placeholder="0" min="0"
+                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">1 Jam</LAbel>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
+                            <span class="text-gray-400">Rp</span>
+                        </div>
+                        <input type="number" data-minutes="60" placeholder="0" min="0"
+                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">1 Jam 30 Menit</LAbel>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
+                            <span class="text-gray-400">Rp</span>
+                        </div>
+                        <input type="number" data-minutes="90" placeholder="0" min="0"
+                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">2 Jam</LAbel>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
+                            <span class="text-gray-400">Rp</span>
+                        </div>
+                        <input type="number" data-minutes="120" placeholder="0" min="0"
+                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">3 Jam</LAbel>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
+                            <span class="text-gray-400">Rp</span>
+                        </div>
+                        <input type="number" data-minutes="180" placeholder="0" min="0"
+                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">5 Jam</LAbel>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
+                            <span class="text-gray-400">Rp</span>
+                        </div>
+                        <input type="number" data-minutes="300" placeholder="0" min="0"
+                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">12 Jam</LAbel>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
+                            <span class="text-gray-400">Rp</span>
+                        </div>
+                        <input type="number" data-minutes="720" placeholder="0" min="0"
+                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">24 Jam (1 Hari)</LAbel>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-8">
+                            <span class="text-gray-400">Rp</span>
+                        </div>
+                        <input type="number" data-minutes="1440" placeholder="0" min="0"
+                               class="price-input w-full pl-9 pr-2 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                
+                 <div class="flex justify-end gap-4 mt-8">
+                    <button type="button" id="pricing-cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-gray-100 font-medium py-2 px-5 rounded-lg transition-all">Batal</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg shadow-md transition-all">
+                        Simpan Harga
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL UNTUK EDIT STOK -->
+    <div id="stock-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-40">
+        <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md">
+            <h4 class="text-2xl font-semibold mb-2 text-white">Edit Stok</h4>
+            <p class="text-lg text-blue-400 mb-6" id="stock-item-name">Nama Item</p>
+            <form id="stock-form">
+                <input type="hidden" id="stock-item-id">
+                <div>
+                    <label for="stock-amount" class="block text-sm font-medium text-gray-300 mb-1">Jumlah</label>
+                    <input type="number" id="stock-amount" name="stockAmount" required min="1" value="1" class="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex justify-end gap-4 mt-8">
+                    <button type="button" id="stock-cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-gray-100 font-medium py-2 px-5 rounded-lg transition-all">Batal</Sbutton>
+                    <button type="button" id="stock-reduce-btn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-5 rounded-lg shadow-md transition-all">Kurangi Stok</button>
+                    <button type="button" id="stock-add-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg shadow-md transition-all">Tambah Stok</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL KUSTOM UNTUK PESAN/ERROR/KONFIRMASI -->
+    <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-50">
+        <div class="modal-content-area bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-sm text-center">
+            <p id="message-text" class="text-lg text-white mb-6">Pesan default</p>
+            <div class="flex justify-center gap-4">
+                <button id="message-cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-gray-100 font-medium py-2 px-6 rounded-lg shadow-md transition-all hidden">
+                    Batal
+                </button>
+                <button id="message-ok-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition-all">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- (BARU) Link ke file JavaScript Anda (di akhir body) -->
+    <script src="script.js" type="module"></script>
+
+</body>
+</html>
